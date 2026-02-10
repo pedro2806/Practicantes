@@ -19,10 +19,10 @@ $hrs_completas = $_POST["hrs_completas"] ?? null;
 
 //Funcion para ENTRADA Y SALIDA
     if ($accion == 'chequeo') {
-        
+
         $QUsuarios = "SELECT movimiento FROM checador WHERE id_usuario = $id_usuario ORDER BY fecha DESC LIMIT 1";
         $res2 = $conn->query($QUsuarios);
-        
+        $UltimoMovimiento = null;
         while ($row2 = $res2->fetch_assoc()) {
             $UltimoMovimiento = $row2["movimiento"];
         }
@@ -41,16 +41,24 @@ $hrs_completas = $_POST["hrs_completas"] ?? null;
                 $movimientoNuevo ="entrada";
             }
             
-        $sql = "INSERT INTO checador (id_usuario, fecha, movimiento) 
+        // validacion de movimiento
+        if ($UltimoMovimiento === 'entrada') {
+            $sql = "INSERT INTO checador (id_usuario, fecha, movimiento, id_entrada) 
+                VALUES ('$id_usuario', '$fecha', '$movimientoNuevo', (SELECT MAX(ch.id) FROM checador ch WHERE ch.id_usuario = $id_usuario AND ch.movimiento = 'entrada'))";
+        }else {
+            $sql = "INSERT INTO checador (id_usuario, fecha, movimiento) 
                 VALUES ('$id_usuario', '$fecha', '$movimientoNuevo')";
-                
+        }
+
+        //registro de horasxdia al hacer salida
         if($movimientoNuevo === 'salida'){
                 $fechaSalida = $fecha;
             $sqlc ="INSERT INTO horasxdia (id_usuario, fecha, total_hrs) 
-                    VALUES ($id_usuario, NOW(), TIMESTAMPDIFF(MINUTE,(SELECT MAX(fecha) FROM checador WHERE id_usuario = $id_usuario AND movimiento = 'entrada'), '$fechaSalida')/60)";
-                                           
+                    VALUES ($id_usuario, NOW(), TIMESTAMPDIFF(MINUTE,(SELECT MAX(fecha) 
+                    FROM checador 
+                    WHERE id_usuario = $id_usuario AND movimiento = 'entrada'), '$fechaSalida')/60)";
                 if ($conn->query($sqlc)) {
-                    echo 'ok';
+                    echo 'si ok';
                 }
                 else{ 
                     echo 'no ok';

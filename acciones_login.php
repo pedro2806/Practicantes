@@ -17,33 +17,21 @@ $rol = $_POST['rol'] ?? 0;;
 //Inicio de Sesion
     if ($accion == 'InicioSesion'){
         
-        $sqlUsuarios = "SELECT * FROM usuarios WHERE usuario = '$usuario' AND password = '$password' AND estatus = 1";
+        $sqlUsuarios = "SELECT usuario, apellidos, nombre, id_usuario, rol, correo FROM usuarios WHERE usuario = '$usuario' AND password = '$password' AND estatus = 1";
         $resUsuarios = $conn->query($sqlUsuarios);
         
-        // Verificar si la consulta fue exitosa
         if ($resUsuarios === false) {
-            die('Error en la consulta: ' . $conn->error);
+            echo json_encode(['ok' => false, 'message' => 'Error en la consulta']);
+            exit;
         }
         
-        // Obtener el nè´‚mero de filas
         $nr = mysqli_num_rows($resUsuarios);
         
-        // Verificar si se encontrè´— un usuario
         if ($nr == 1) {
-            $registros = []; 
-            while ($row = $resUsuarios->fetch_assoc()) {
-                $registros [] = array(
-                    'usuario' => $row["usuario"],
-                    'apellidos' => $row["apellidos"],
-                    'nombre' => $row["nombre"],
-                    'id_usuario' => $row["id_usuario"],
-                    'rol' => $row["rol"],  
-                );
-            }
-            echo json_encode($registros);
-        } else if ($nr  ==  0){
-            echo '<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>';
-            echo '<script>swal("Usuario o contrase√±a incorrectos!", "Vuelve a intentar!", "error");</script>';
+            $row = $resUsuarios->fetch_assoc();
+            echo json_encode(['ok' => true, 'data' => $row]);
+        } else {
+            echo json_encode(['ok' => false, 'message' => 'Usuario o contrase√±a incorrectos']);
         }
-    }    
+    }
 ?>

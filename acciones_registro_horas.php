@@ -57,7 +57,7 @@ error_log("Datos recibidos: usuario=$id_usuario, dia=$dia, entrada=$entrada, sal
                             WHERE u.id_area IN (
                                 SELECT id_area
                                 FROM usuarios
-                                WHERE rol = 1)
+                                WHERE id_usuario = '$id_UScookie')
                             ";
         }
         
@@ -68,7 +68,7 @@ error_log("Datos recibidos: usuario=$id_usuario, dia=$dia, entrada=$entrada, sal
                                  FROM usuarios u 
                                  WHERE u.id_usuario = h.id_usuario) AS nombre                           
                             FROM horario h
-                            WHERE id_usuario IN ('$id_cookie');
+                            WHERE id_usuario IN ('$id_UScookie');
                              ";
         } 
         $result_horario = $conn->query($sql_horario);
