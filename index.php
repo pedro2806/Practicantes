@@ -118,20 +118,24 @@
                     method: 'POST',
                     dataType: 'json',
                     data:{usuario, password, accion},
-                    success: function(registros) {
-                        swal.fire("!Acceso Concedido!", "Se accedio correctamente.", "success");
-                        registro = registros[0];
-                        
+                    success: function(respuesta) {
+                        if (!respuesta || !respuesta.ok) {
+                            swal.fire("Usuario o contraseña incorrectos!", "Vuelve a intentar!", "error");
+                            return;
+                        }
+                        var registro = respuesta.data;
+
                         document.cookie = "usuario=" + registro.usuario + "; expires=" + new Date(Date.now() + 99900000).toUTCString() + "; SameSite=Lax;";
-                        document.cookie = "apellidos=" + registro.apellidos + "; expires=" + new Date(Date.now() + 99900000).toUTCString() + "; SameSite=Lax;";
                         document.cookie = "nombre=" + registro.nombre + "; expires=" + new Date(Date.now() + 99900000).toUTCString() + "; SameSite=Lax;";
+                        document.cookie = "apellidos=" + registro.apellidos + "; expires=" + new Date(Date.now() + 99900000).toUTCString() + "; SameSite=Lax;";
                         document.cookie = "rol=" + registro.rol + "; expires=" + new Date(Date.now() + 99900000).toUTCString() + "; SameSite=Lax;";
                         document.cookie = "id_usuario=" + registro.id_usuario + "; expires=" + new Date(Date.now() + 99900000).toUTCString() + "; SameSite=Lax;";
-                        
-                        window.location.assign("inicio.php")
+                        document.cookie = "correo=" + registro.correo + "; expires=" + new Date(Date.now() + 99900000).toUTCString() + "; SameSite=Lax;";
+
+                        window.location.assign("inicio.php");
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
-                        swal.fire("Algo Salio Mal!", "Intenta de Nuevo", "error");
+                        swal.fire("¡Algo Salió Mal!", "Intenta de Nuevo", "error");
                     }
                 }); 
             }

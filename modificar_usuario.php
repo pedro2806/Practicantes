@@ -104,36 +104,47 @@
                             <input type="text" name="apellidos" id="apellidos" required class="form-control">
                         </div>
                         <div class="col-sm-3">
-                            <label for="id_area">Área</label><br>
-                            <select id="id_area" name="id_area" class="form-select" required>
+                            <label for="telefono">Telefono:</label><br>
+                            <input name="telefono" id="telefono" required class="form-control">
+                        </div>
+                    </div> <br>
+                    <div class="row">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-3">
+                            <label for="id_escuela">Escuela:</label><br>
+                            <select id="id_escuela" name="id_escuela" class="form-select">
                                 <option value="">Selecciona...</option>
                             </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="correo">Correo:</label><br>
+                            <input name="correo" id="correo" required class="form-control">
                         </div>
                     </div>
                     <br><hr><br>
                     <div class="row">
                         <div class="col-sm-1"></div>
                         <div class="col-sm-3">
-                            <label for="id_escuela">Escuela:</label><br>
-                            <select id="id_escuela" name="id_escuela" class="form-select" required>
+                            <label for="id_area">Área</label><br>
+                            <select id="id_area" name="id_area" class="form-select">
                                 <option value="">Selecciona...</option>
                             </select>
                         </div>
-                        
                         <div class="col-sm-3">
-                            <label for="correo">Correo:</label><br>
-                            <input name="correo" id="correo" required class="form-control">
+                            <label for="id_jefe">Jefe:</label><br>
+                            <select id="id_jefe" name="id_jefe" class="form-select" required>
+                                <option value="">Selecciona...</option>
+                            </select>
                         </div>
-                        
                         <div class="col-sm-3">
-                            <label for="telefono">Telefono:</label><br>
-                            <input name="telefono" id="telefono" required class="form-control">
-                        </div><br><br>
-                        <center>
-                            <div class="col-sm-3"><br>
-                                <button type="button" name="submit" class="btn btn-sm btn-outline-success" onClick="GuardarCambios()">Confirmar</button>
-                            </div>
-                        </center>
+                            <label for="fin_periodo">Fin Periodo</label><br>
+                            <input type="date" name="fin_periodo" id="fin_periodo" required class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 text-center"><br>
+                            <button type="button" name="submit" class="btn btn-sm btn-outline-success" onClick="GuardarCambios()">Confirmar</button>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -164,6 +175,18 @@
     <script type="text/javascript">
         $(document).ready(function () {
             InfoUs();
+            $('#staticBackdrop2').on('shown.bs.modal', function () {
+                var selects = $('#id_area, #id_escuela, #id_jefe');
+                selects.each(function () {
+                    if ($(this).data('select2')) {
+                        $(this).select2('destroy');
+                    }
+                });
+                selects.select2({
+                    width: '100%',
+                    dropdownParent: $('#staticBackdrop2')
+                });
+            });
         });
         
         //Guardar cambios usuario
@@ -173,6 +196,7 @@
             var apellidos = $('#apellidos').val();
             var id_area = $('#id_area').val();
             var id_escuela = $('#id_escuela').val();
+            var id_jefe = $('#id_jefe').val();
             var correo = $('#correo').val();
             var telefono = $('#telefono').val();
             var accion = "guardarC";
@@ -182,10 +206,11 @@
                 method: 'POST',
                 //async: false,
                 dataType: 'json',
-                data:{usuario, nombre, apellidos, id_area, id_escuela, correo, telefono, accion},
+                data:{usuario, nombre, apellidos, id_area, id_escuela, id_jefe, correo, telefono, accion},
                 success: function() {
                     swal.fire("Se aplicaron los cambios","","success");
                     InfoUs()
+                    $('#staticBackdrop2').modal('hide');
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     swal.fire("Algo Salio Mal!", "Intenta de Nuevo", "error");
@@ -275,8 +300,6 @@
         
         //Modificar Usuario
         function LlenarModal(id_usuario){
-            cargarArea();
-            cargarEscuela();
             $.ajax({
                 url: 'acciones_usuario.php',
                 type: 'POST',
@@ -288,10 +311,12 @@
                         $('#id_usuario').val(Registro.id_usuario);
                         $('#nombre').val(Registro.nombre);
                         $('#apellidos').val(Registro.apellidos);
-                        $('#id_area').val(Registro.id_area);
-                        $('#id_escuela').val(Registro.id_escuela);
                         $('#correo').val(Registro.correo);
                         $('#telefono').val(Registro.telefono);
+                        $('#fin_periodo').val(Registro.fin_periodo || '');
+                        cargarArea(Registro.id_area);
+                        cargarEscuela(Registro.id_escuela);
+                        cargarJefe(Registro.id_jefe);
                     });
                     InfoUs()
                 },
@@ -302,7 +327,7 @@
         }
         
         //Cargar Areas  
-        function cargarArea(){
+        function cargarArea(selectedId){
             accion = "cargarArea";
             
             $.ajax({
@@ -311,13 +336,16 @@
                 dataType: 'json', 
                 data: {accion},
                 success: function(response) {
-                   var area = $('#id_area'); 
+                   var area = $('#id_area');
+                   area.empty().append('<option value="">Selecciona...</option>');
                    
-                   response.forEach(function(Registro) {
-                            var option = $('<option></option>').attr('value', Registro.id_area).text(Registro.CDAREA);
-                            area.append(option);
-                       }
-                   )
+                    response.forEach(function(Registro) {
+                        var option = $('<option></option>').attr('value', Registro.id_area).text(Registro.AREA);
+                        area.append(option);
+                   });
+                   if (selectedId) {
+                        area.val(String(selectedId));
+                   }
                 },
                 error: function(xhr, status, error) {
                     console.error('Error al cargar las áreas:', error);
@@ -326,7 +354,7 @@
         }
         
         //Cargar Escuelas   
-        function cargarEscuela(){
+        function cargarEscuela(selectedId){
             accion = "cargarEsc";
             
             $.ajax({
@@ -335,18 +363,48 @@
                 dataType: 'json', 
                 data: {accion},
                 success: function(response) {
-                    var escuelas = $('#id_escuela'); 
+                    var escuelas = $('#id_escuela');
+                    escuelas.empty().append('<option value="">Selecciona...</option>');
                    
                     response.forEach(function(Registro) {
-                            var option = $('<option></option>').attr('value', Registro.id_escuela).text(Registro.nombre_esc);
-                            escuelas.append(option);
-                        }
-                    )
+                        var option = $('<option></option>').attr('value', Registro.id_escuela).text(Registro.nombre_esc);
+                        escuelas.append(option);
+                    });
+                    if (selectedId) {
+                        escuelas.val(String(selectedId));
+                    }
                 },
                 error: function(xhr, status, error) {
                     console.error('Error al cargar las escuelas:', error);
                 }
             });  
+        }
+
+        //Cargar Jefes
+        function cargarJefe(selectedId){
+            accion = "cargarJefe";
+
+            $.ajax({
+                url: 'acciones_usuario.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {accion},
+                success: function(response) {
+                    var jefe = $('#id_jefe');
+                    jefe.empty().append('<option value="">Selecciona...</option>');
+
+                    response.forEach(function(Registro) {
+                        var option = $('<option></option>').attr('value', Registro.id_usuario).text(Registro.nombre);
+                        jefe.append(option);
+                    });
+                    if (selectedId) {
+                        jefe.val(String(selectedId));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al cargar los jefes:', error);
+                }
+            });
         }
     </script>
 </body>

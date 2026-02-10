@@ -66,10 +66,6 @@
                         }
                         ?>
                     </div>
-                    
-                    <!--BOTON PARA PRUEBAS ACTIVIADES-->
-                    <!--<button type="button" class="btn btn-primary" onclick="actividadesPrueba()">Agregar Actividad</button>-->
-                    
                     <!-- Modal De Actividades-->
                     <div id="modalActividades" name="modalActividades" class="modal fade" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -143,137 +139,81 @@
 <script  type="text/javascript">
 window.itemId = 0;
     $(document).ready(function (){
-        evaluaChequeo(); 
         total_horas();
+        updateChequeoUI();
     });
-    
-    function evaluaChequeo(){
-        
-        const toggleBtn = document.getElementById('toggleBtn');
-        const logs = document.getElementById('logs');    
-           <?php 
-                $id_usuario = $_COOKIE['id_usuario'];
-                $QUsuarios = "SELECT movimiento FROM checador WHERE id_usuario = $id_usuario ORDER BY fecha DESC LIMIT 1";
-                $res2 = $conn->query($QUsuarios);
-                
-                while ($row2 = $res2->fetch_assoc()) {
-                    $UltimoMovimiento = $row2["movimiento"];
-                }
-                $nr = mysqli_num_rows($res2);
-                if ($nr > 0) {
-                    if($UltimoMovimiento == "entrada"){
-                        
-                        echo 'let isCheckIn = true;';
-                    }
-                    else{
-                        echo 'let isCheckIn = false;';
-                    }
-                } 
-                else// ($nr  ==  0)
-                {
-                    echo 'let isCheckIn = false;';
-                }
-            ?>
-                const now = new Date(); 
-                const year = now.getFullYear();
-                const month = String(now.getMonth() + 1).padStart(2, '0'); // Los meses comienzan desde 0, por eso sumamos 1
-                const day = String(now.getDate()).padStart(2, '0');
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const seconds = String(now.getSeconds()).padStart(2, '0');
-                
-                const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-                const timeString = now.toLocaleTimeString();
-                const logEntry = document.createElement('p');
 
-                if (isCheckIn) {
-                    //logEntry.textContent = `Entrada: ${timeString}`;
-                    //toggleBtn.textContent = 'Confirmar';
-                    
-                } else {
-                    //logEntry.textContent = `Salida: ${timeString}`;
-                    //toggleBtn.textContent = 'Confirmar';
-                }
-                
-                /*logs.appendChild(logEntry);
-                isCheckIn = !isCheckIn;*/
+    <?php
+        $id_usuario = $_COOKIE['id_usuario'] ?? 0;
+        $UltimoMovimiento = null;
+        $QUsuarios2 = "SELECT movimiento FROM checador WHERE id_usuario = $id_usuario ORDER BY fecha DESC LIMIT 1";
+        $res = $conn->query($QUsuarios2);
+        if ($res) {
+            while ($row = $res->fetch_assoc()) {
+                $UltimoMovimiento = $row["movimiento"];
+            }
+        }
+        $nr2 = $res ? mysqli_num_rows($res) : 0;
+        $initialIsCheckIn = ($nr2 >= 1 && $UltimoMovimiento === "entrada") ? 'true' : 'false';
+    ?>
+
+    const toggleBtn = document.getElementById('toggleBtn');
+    const logs = document.getElementById('logs');
+    let isCheckIn = <?php echo $initialIsCheckIn; ?>;
+    const id_usuario = <?php echo (int) $id_usuario; ?>;
+
+    function updateChequeoUI() {
+        if (!toggleBtn) {
+            return;
+        }
+        toggleBtn.textContent = isCheckIn ? 'Registrar salida' : 'Registrar entrada';
     }
-    
+
     document.addEventListener('DOMContentLoaded', () => {
-            const toggleBtn = document.getElementById('toggleBtn');
-            const logs = document.getElementById('logs');
-            
-            <?php 
-                $id_usuario = $_COOKIE['id_usuario'];
-                $QUsuarios2 = "SELECT movimiento FROM checador WHERE id_usuario = $id_usuario ORDER BY fecha DESC LIMIT 1";
-                $res = $conn->query($QUsuarios2); 
-                
-                while ($row = $res->fetch_assoc()) { 
-                    $UltimoMovimiento = $row["movimiento"];
-                }
-                $nr2 = mysqli_num_rows($res); 
-                if ($nr2 >= 1) {
-                    if($UltimoMovimiento == "entrada"){
-                        
-                        echo 'let isCheckIn = true;';
-                    }
-                    else{
-                        echo 'let isCheckIn = false;';
-                    }
-                } 
-                else{
-                    echo 'let isCheckIn = false;';
-                }       
-            ?>
-            
-            var id_usuario = <?php echo $_COOKIE['id_usuario']; ?>
+        if (!toggleBtn) {
+            return;
+        }
 
-            toggleBtn.addEventListener('click', () => {
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = String(now.getMonth() + 1).padStart(2, '0'); // Los meses comienzan desde 0, por eso sumamos 1
-                const day = String(now.getDate()).padStart(2, '0');
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const seconds = String(now.getSeconds()).padStart(2, '0');
-                
-                const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-                const timeString = now.toLocaleTimeString();
-                const logEntry = document.createElement('p');
+        toggleBtn.addEventListener('click', () => {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
 
-                if (isCheckIn) {
-                    logEntry.textContent = `Salida: ${timeString}`;
-                    //toggleBtn.textContent = 'Registrar Entrada';
-                } else {
-                    logEntry.textContent = `Entrada: ${timeString}`;
-                    //toggleBtn.textContent = 'Registrar Salida';
-                }
+            const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            const timeString = now.toLocaleTimeString();
+            const logEntry = document.createElement('p');
+            const movimiento = isCheckIn ? 'salida' : 'entrada';
+
+            logEntry.textContent = `${movimiento === 'salida' ? 'Salida' : 'Entrada'}: ${timeString}`;
+            if (logs) {
                 logs.appendChild(logEntry);
-                isCheckIn = !isCheckIn;
-                
-                // Enviar los datos al servidor usando AJAX
-                $.ajax({
-                    url: 'acciones_practicas.php',
-                    type: 'POST',
-                    datatype: 'json',
-                    data: {
-                        accion: 'chequeo' , 
-                        movimiento: isCheckIn ? 'salida' : 'entrada', // Tipo de movimiento
-                        fRegistro: formattedDate,
-                        usuario: id_usuario
-                    },
-                    success: function(response) {
-                        movimiento = isCheckIn ? 'entrada' : 'salida';
-                        swal("Se registró el tiempo", movimiento, "success");
-                        actividades(movimiento);
-                        evaluaChequeo();
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        swal("¡Algo salió mal!", "Intenta de nuevo", "error");
-                    }
-                });
+            }
+
+            // Enviar los datos al servidor usando AJAX
+            $.ajax({
+                url: 'acciones_practicas.php',
+                type: 'POST',
+                datatype: 'json',
+                data: {
+                    accion: 'chequeo',
+                    fRegistro: formattedDate,
+                    usuario: id_usuario
+                },
+                success: function(response) {
+                    actividades(movimiento);
+                    isCheckIn = !isCheckIn;
+                    updateChequeoUI();
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    swal("¡Algo salio mal!", "Intenta de nuevo", "error");
+                }
             });
         });
+    });
     
     //ESTA FUNCION CREA LOS ITEMS
     var creaItems = function() {
@@ -365,9 +305,9 @@ window.itemId = 0;
     }
        
     //BOTON DE PRUEBA MODAL
-    /*function actividadesPrueba(){
+    function actividadesPrueba(){
         $('#modalActividades').modal('show');
-    }*/
+    }
     
     //Función para abrir el modal
     function actividades(movimiento) {
@@ -375,6 +315,10 @@ window.itemId = 0;
             var modal = document.getElementById("modalActividades");
             modal.style.display = "block";
             $('#modalActividades').modal('show');
+            $('#divItem').empty();
+            $('#Itemstxt').val('0');
+            window.itemId = 0;
+            creaItems();
         } 
     }
     

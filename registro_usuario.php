@@ -50,9 +50,9 @@
                 <!-- Content Row -->
                 <div class = "row">
                     <div class = "card shadow mb-2">
-                        <form action="acciones_practicas.php" method="POST" enctype="multipart/form-data">                        
+                        <form id="form-nuevo-usuario" method="post" action="" enctype="multipart/form-data">
                             <div class = "card-head"><br>
-                                <form method="post" action=""><br>
+                                    <!--Datos Usuario-->
                                     <div class = "row">                         
                                         <div class = "col-sm-3">
                                             <label>Nombre (s)</label>
@@ -66,7 +66,7 @@
                                         
                                         <div class = "col-sm-3">
                                             <label for="correo" class="form-label">Email</label>
-                                            <input id="correo" name="correo" type="email" class="form-control" placeholder="name@example.com">
+                                            <input id="correo" name="correo" type="email" class="form-control" placeholder="name@example.com" required></input>
                                         </div>
                                         
                                         <div class = "col-sm-3">
@@ -74,29 +74,33 @@
                                             <input type="tel" id="telefono" name="telefono" class="form-control"/>
                                         </div>
                                     </div> <br>
+                                    <!--Datos Personales-->
                                     <div class = "row">
                                         <div class = "col-sm-3">
-                                            <label for="id_escuela">Escuela</label>
-                                            <select id="id_escuela" name="id_escuela" class="form-select" required>
+                                            <label for="curp">CURP</label>
+                                            <input id="curp" name="curp" class="form-control"/>
+                                        </div>
+
+                                        <div class = "col-sm-3">
+                                            <label for="rfc">RFC</label>
+                                            <input id="rfc" name="rfc" class="form-control"/>
+                                        </div>
+
+                                        <div class = "col-sm-3">
+                                            <label for="nss">NSS</label>
+                                            <input id="nss" name="nss" class="form-control" required/>
+                                        </div>
+                                        
+                                        <div class = "col-sm-3">
+                                            <label for="sexo">Sexo</label>
+                                            <select id="sexo" name="sexo" class="form-select">
                                                 <option value="">Selecciona...</option>
+                                                <option value="M">Masculino</option>
+                                                <option value="F">Femenino</option>
                                             </select>
                                         </div>
-                                        
-                                        <div class = "col-sm-3">
-                                            <label>Hrs. Requeridas</label>
-                                            <input type="number" id="hrs_requeridas" name="hrs_requeridas"  class="form-control"  required></input>
-                                        </div>
-                                        
-                                        <div class = "col-sm-3">
-                                            <label>Inicio de Practicas/Servicio</label>
-                                            <input type="date" id="inicio_p" name="inicio_p"  class="form-control" required></input>
-                                        </div>
-                                        
-                                        <div class = "col-sm-3">
-                                            <label>Fin de Practicas/Servicio</label>
-                                            <input type="date" id="fin_p" name="fin_p"  class="form-control"  required></input>
-                                        </div>
                                     </div> <br>
+                                    <!--Datos Empresa-->
                                     <div class = "row">
                                         <div class = "col-sm-3">
                                             <label>Usuario</label>
@@ -116,26 +120,50 @@
                                         </div>
                                         
                                         <div class = "col-sm-3">
-                                            <label for="rol">Rol</label>
-                                            <select id="rol" name="rol" class="form-select" required>
+                                            <label for="id_jefe">Jefe</label>
+                                            <select id="id_jefe" name="id_jefe" class="form-select" required>
                                                 <option value="">Selecciona...</option>
-                                                <option value="2">Practicante/Servicio Social</option>
-                                                <option value="1">Jefe de Área</option>
-                                                <option value="0">Administrador</option>
                                             </select>
+                                        </div>
+                                    </div> <br>
+                                    <!--Datos Escuela-->
+                                    <div class = "row">
+                                        <div class = "col-sm-3">
+                                            <label for="id_escuela">Escuela</label>
+                                            <select id="id_escuela" name="id_escuela" class="form-select" required>
+                                                <option value="">Selecciona...</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class = "col-sm-3">
+                                            <label>Hrs. Requeridas</label>
+                                            <input type="number" id="hrs_requeridas" name="hrs_requeridas"  class="form-control" ></input>
+                                        </div>
+                                        
+                                        <div class = "col-sm-3">
+                                            <label>Inicio de Practicas/Servicio</label>
+                                            <input type="date" id="inicio_p" name="inicio_p"  class="form-control" required></input>
+                                        </div>
+                                        
+                                        <div class = "col-sm-3">
+                                            <label>Fin de Practicas/Servicio</label>
+                                            <input type="date" id="fin_p" name="fin_p"  class="form-control"></input>
+                                        </div>
+                                            <!--ROL-->
+                                        <div class = "col-sm-3">
+                                            <input type="hidden" id="rol" name="rol" class="form-control" value="2"/>
                                         </div>
                                             <!--ESTATUS-->
                                         <div class = "col-sm-3">
                                             <input type="hidden" id="estatus" name="estatus" class="form-control" value="1"/>
                                         </div>
-                                    </div> 
+                                    </div> <br>
                                     <center>
                                     <div class = "col-sm-2"><br>
                                         <button type="button" id="confirmar" class="btn btn-sm btn-outline-success" onClick = "enviarDatos()">Confirmar</button>
                                     </div>
                                     </center>
-                                </form><br>
-                            </div>
+                            <br></div>
                         </form>
                     </div>
                 </div>
@@ -179,6 +207,10 @@
         $(document).ready(function () {
             cargarEscuela();
             cargarArea();
+            cargarJefe();
+            $('#id_area, #id_jefe, #id_escuela').select2({
+                width: '100%'
+            });
         });
      
         //Cargar Escuelas   
@@ -218,7 +250,7 @@
                    var area = $('#id_area'); 
                    
                    response.forEach(function(Registro) {
-                            var option = $('<option></option>').attr('value', Registro.id_area).text(Registro.CDAREA);
+                            var option = $('<option></option>').attr('value', Registro.id_area).text(Registro.AREA);
                             area.append(option);
                        }
                    )
@@ -228,47 +260,44 @@
                 }
             });
         }
-    
-        //Guardar Usuario   
-        function enviarDatos(){
-            var nombre = $('#nombre').val();
-            var apellidos = $('#apellidos').val();
-            var correo = $('#correo').val();
-            var telefono = $('#telefono').val();
-            var id_escuela = $('#id_escuela').val();
-            var hrs_requeridas = $('#hrs_requeridas').val();
-            var inicio_p = $('#inicio_p').val();
-            var fin_p = $('#fin_p').val();
-            var usuario =$('#usuario').val();
-            var password = $('#password').val();
-            var id_area = $('#id_area').val();
-            var rol = $('#rol').val();
-            var accion = "nuevo_usuario";
+
+        //Cargar Jefes|
+        function cargarJefe(){
+            accion = "cargarJefe";
             
             $.ajax({
                 url: 'acciones_usuario.php',
                 method: 'POST',
-                async: false,
-                dataType: 'json',
-                data:{accion, nombre, apellidos, correo, telefono, id_escuela , hrs_requeridas, inicio_p, fin_p, usuario, password, id_area, rol},
-                success: function(Registros) {
-                    if (Registros == '1') {
-                        Swal.fire({
-                        title: '¡Éxito!',
-                        text: 'Se registro al usuario.',
-                        icon: 'success',
-                        confirmButtonText: 'Aceptar'
-                    });
-                        window.location.assign("modificar_usuario.php");
-                    }
-                },error: function(jqXHR, textStatus, errorThrown) {
-                        Swal.fire({
-                        title: '¡Error!',
-                        text: 'No se pudo registrar a usuario.',
-                        icon: 'error',
-                        confirmButtonText: 'Aceptar'
-                    });;
+                dataType: 'json', 
+                data: {accion},
+                success: function(response) {
+                   var jefe = $('#id_jefe'); 
+                   
+                   response.forEach(function(Registro) {
+                            var option = $('<option></option>').attr('value', Registro.id_usuario).text(Registro.nombre);
+                            jefe.append(option);
+                       }
+                   )
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al cargar los jefes:', error);
                 }
+            });
+        }
+        //Guardar Usuario   
+        function enviarDatos(){
+            const form = document.getElementById('form-nuevo-usuario');
+            const formData = new FormData(form);
+            formData.append('accion', 'nuevo_usuario');
+
+            $.ajax({
+                url: 'acciones_usuario.php',
+                method: 'POST',
+                dataType: 'json',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(Registros) { /* ... */ }
             });
         }
     </script>
