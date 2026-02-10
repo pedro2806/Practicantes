@@ -1,11 +1,6 @@
 <?php
     session_start();
     include 'conn.php';
-    if($_COOKIE['nombre'] == ''){
-        echo $_COOKIE['nombre'];
-        echo $_COOKIE['apellidos'];
-        echo '<script>window.location.assign("index.php")</script>';
-    }
 ?>
 <!DOCTYPE html>
 <html lang = "sp"> 
