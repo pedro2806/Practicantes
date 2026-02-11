@@ -16,7 +16,7 @@
 	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.html5.min.js"></script>
 	<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.print.min.js"></script>
 	<script type="text/javascript" class="init">
-	
+
 $(document).ready(function() {
     document.cookie = "nombre =00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
     document.cookie = "rol =00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
@@ -24,7 +24,13 @@ $(document).ready(function() {
     document.cookie = "id_usuario =00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
     document.cookie = "usuario =00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 
-    window.location.assign("https://www.messbook.com.mx/Practicantes")        
+
+	if (SesionLogin === "LoginMaster") {
+		window.location.assign("https://www.messbook.com.mx/LoginMaster/inicio.php");
+	}else {
+		window.location.assign("https://www.messbook.com.mx/Practicantes");
+	} 
+            
 } );
 
 	</script>
