@@ -18,18 +18,24 @@
 	<script type="text/javascript" class="init">
 
 $(document).ready(function() {
+	function getCookieValue(name) {
+		var match = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, "\\$1") + "=([^;]*)"));
+		return match ? decodeURIComponent(match[1]) : "";
+	}
+	var SesionLogin = getCookieValue("SesionLogin");
+
     document.cookie = "nombre =00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
     document.cookie = "rol =00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
     document.cookie = "apellidos =00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
     document.cookie = "id_usuario =00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
     document.cookie = "usuario =00; expires=Thu, 01 Jan 1970 00:00:00 UTC";
-
+	document.cookie = "SesionLogin=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 
 	if (SesionLogin === "LoginMaster") {
-		window.location.assign("https://www.messbook.com.mx/LoginMaster/inicio.php");
+		window.location.assign(window.location.origin + "/LoginMaster/inicio.php");
 	}else {
-		window.location.assign("https://www.messbook.com.mx/Practicantes");
-	} 
+		window.location.assign(window.location.origin + "/Practicantes");
+	}
             
 } );
 

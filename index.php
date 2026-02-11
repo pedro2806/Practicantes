@@ -55,21 +55,23 @@
                                         <h1 class = "h4 text-gray-900 mb-4">Bienvenid@</h1>
                                     </div>
                                     <br>
-                                        <div class = "form-group">
-                                            <input type="text" class="form-control form-control-user" id="Inputusuario" name="Inputusuario" placeholder="Usuario" required> 
-                                        </div>
-                                        <div class = "form-group">
-                                            <input type = "password" class = "form-control form-control-user" id = "InputPassword" name = "InputPassword" placeholder = "Contrase&ntilde;a" required>
-                                        </div>
-                                        <div class = "form-group">
-                                            <div class = "custom-control custom-checkbox small">
-                                                <input type = "checkbox" class = "custom-control-input" id = "customCheck">
-                                                <label class = "custom-control-label" for = "customCheck">Recordar usuario y contrase&ntilde;a</label>
+                                        <form id="loginForm">
+                                            <div class = "form-group">
+                                                <input type="text" class="form-control form-control-user" id="Inputusuario" name="Inputusuario" placeholder="Usuario" required> 
                                             </div>
-                                        </div>
-                                        <center>
-                                            <button class = "btn btn-primary" type = "button" id = "btningresar" name = "btningresar" onClick = "Inicio();">Acceder</button>                                      
-                                        </center>
+                                            <div class = "form-group">
+                                                <input type = "password" class = "form-control form-control-user" id = "InputPassword" name = "InputPassword" placeholder = "Contrase&ntilde;a" required>
+                                            </div>
+                                            <div class = "form-group">
+                                                <div class = "custom-control custom-checkbox small">
+                                                    <input type = "checkbox" class = "custom-control-input" id = "customCheck">
+                                                    <label class = "custom-control-label" for = "customCheck">Recordar usuario y contrase&ntilde;a</label>
+                                                </div>
+                                            </div>
+                                            <center>
+                                                <button class = "btn btn-primary" type = "submit" id = "btningresar" name = "btningresar">Acceder</button>                                      
+                                            </center>
+                                        </form>
                                         <br>
                                         <hr>
                                     <div class = "text-center">
@@ -97,6 +99,13 @@
     <!--<script src="md5.js"></script>-->
     
     <script>
+
+        $(document).ready(function() {
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault();
+                Inicio();
+            });
+        });
         
         //Funcion para Iniciar sesion
         function Inicio(){
