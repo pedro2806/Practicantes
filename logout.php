@@ -32,7 +32,7 @@ $(document).ready(function() {
 	document.cookie = "SesionLogin=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 
 	if (SesionLogin === "LoginMaster") {
-		window.location.assign(window.location.origin + "/LoginMaster/inicio.php");
+		window.location.assign(window.location.origin + "/loginMaster/inicio.php");
 	}else {
 		window.location.assign(window.location.origin + "/Practicantes");
 	}
