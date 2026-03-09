@@ -7,7 +7,7 @@ $id_UScookie = $_COOKIE["id_usuario"];
 //Tabla de CHECADOR
 $entrada = $_POST["entrada"] ?? null;
 $salida = $_POST["salida"] ?? null;
-$id_usuario = $_POST["usuario"] ?? null;
+$id_usuario = $_POST["id_usuario"] ?? null;
 $fecha = $_POST["fRegistro"] ?? null;
 $movimiento = $_POST["movimiento"] ?? null;
 
@@ -110,7 +110,7 @@ $hrs_completas = $_POST["hrs_completas"] ?? null;
 // Total de Horas
     if ($accion == 'total_horas') {
         
-        $sql_horas = "SELECT ROUND (SUM(total_hrs),2) AS total_horas FROM horasxdia WHERE id_usuario = '$id_usuario'";
+        $sql_horas = "SELECT ROUND (SUM(total_hrs),2) AS total_horas FROM horasxdia WHERE id_usuario = '$id_UScookie'";
         $result_horas = $conn->query($sql_horas);
 
             $registros3 = [];

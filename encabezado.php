@@ -80,7 +80,7 @@ include 'conn.php';
         $.ajax({
             url: 'acciones_practicas.php', 
             type: 'POST',
-            data: { accion: 'total_horas' },
+            data: { accion: 'total_horas'},
             dataType: 'json',
             success: function(response) {
                 response.forEach(
@@ -91,10 +91,7 @@ include 'conn.php';
                         
                     } else {
                         $("#Total_Horas").text("0.0");
-                        Swal.fire({
-                            icon: "warning",
-                            text: "Aun no existen registro de horas."
-                        });
+                        
                     }
                 }
                 );

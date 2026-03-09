@@ -56,15 +56,14 @@ $AREA = $_POST['AREA'];
     
 //MODIFICAR Usuario 
     if($accion == "guardarC") {
-     
-    $sqlmodificar_us = "UPDATE usuarios 
-                        SET nombre = '$nombre', apellidos = '$apellidos_us', id_area = '$id_area_us', id_escuela = '$id_escuela', correo = '$correo_us', telefono = '$tel_us', sexo = '$sexo', nss = '$nss', rfc = '$rfc', curp = '$curp', id_jefe = '$id_jefe'
-                        WHERE id_usuario='$id_usuario'";
-    $resultmodificar_us = $conn->query($sqlmodificar_us);
-        
-    // Devolver los datos en formato JSON
-    echo json_encode($resultmodificar_us);     
-}
+        $sqlmodificar_us = "UPDATE usuarios 
+                            SET nombre = '$nombre', apellidos = '$apellidos_us', id_area = '$id_area_us', id_escuela = '$id_escuela', correo = '$correo_us', telefono = '$tel_us', sexo = '$sexo', nss = '$nss', rfc = '$rfc', curp = '$curp', id_jefe = '$id_jefe'
+                            WHERE id_usuario='$id_usuario'";
+        $resultmodificar_us = $conn->query($sqlmodificar_us);
+            
+        // Devolver los datos en formato JSON
+        echo json_encode($resultmodificar_us);     
+    }
 
 //Llebar Tabla Usuarios
     if($accion == "LlenarTablaUs"){
