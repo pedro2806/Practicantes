@@ -19,8 +19,8 @@
 
 $(document).ready(function() {
 	function getCookieValue(name) {
-		var match = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, "\\$1") + "=([^;]*)"));
-		return match ? decodeURIComponent(match[1]) : "";
+		const cookies = new URLSearchParams(document.cookie.replace(/; /g, '&'));
+		return cookies.get(name) || undefined;
 	}
 	var SesionLogin = getCookieValue("SesionLogin");
 
